@@ -66,7 +66,7 @@
         app:itemTextColor="@color/colorNavIcon"
         app:itemIconTint="@color/colorNavIcon"
         app:itemBackground="@color/colorPrimary"
-        
+
         >
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
