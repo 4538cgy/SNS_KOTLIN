@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.uos.sns_kotlin.Model.AlarmDTO
 import com.uos.sns_kotlin.Model.ContentDTO
 import com.uos.sns_kotlin.R
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -86,7 +87,7 @@ class DetailViewFragment : Fragment() {
 
 
             //userId
-            viewholder.detailviewitem_explain_textview.text = contentDTOs!![position].userId
+            viewholder.detailviewitem_profile_textview.text = contentDTOs!![position].userId
 
             //Image
             Glide.with(holder.itemView.context).load(contentDTOs!![position].imageUrl).into(viewholder.detailviewitem_imageview_content)
@@ -130,6 +131,7 @@ class DetailViewFragment : Fragment() {
             viewholder.detailviewitem_comment_imageview.setOnClickListener { v ->
                 var intent = Intent(v.context,CommentActivity::class.java)
                 intent.putExtra("contentUid",contentUidList[position])
+                intent.putExtra("destinationUid",contentDTOs[position].uid)
                 startActivity(intent)
             }
 
@@ -154,6 +156,8 @@ class DetailViewFragment : Fragment() {
                     //When the button is not clicked
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
                     contentDTO?.favorites[uid!!] = true
+
+                    favoriteAlarm(contentDTOs[position].uid!!)
                 }
                         transaction.set(tsDoc,contentDTO)
 
@@ -161,6 +165,16 @@ class DetailViewFragment : Fragment() {
             }
 
 
+        }
+
+        fun favoriteAlarm(destinationUid : String){
+            var alarmDTO = AlarmDTO()
+            alarmDTO.destinationUid = destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
         }
     }
 }

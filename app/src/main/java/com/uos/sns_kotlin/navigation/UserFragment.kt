@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.uos.sns_kotlin.LoginActivity
 import com.uos.sns_kotlin.MainActivity
+import com.uos.sns_kotlin.Model.AlarmDTO
 import com.uos.sns_kotlin.Model.ContentDTO
 import com.uos.sns_kotlin.Model.FollowDTO
 import com.uos.sns_kotlin.R
@@ -173,11 +174,22 @@ class UserFragment : Fragment() {
                 //It cancel my follower when i don't follow a third person
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
             }
 
             transaction.set(tsDocFollower,followDTO!!)
             return@runTransaction
         }
+    }
+
+    fun followerAlarm(destinationUid : String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = auth?.currentUser?.email
+        alarmDTO.uid = auth?.currentUser?.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp = System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
     fun getProfileImage(){
