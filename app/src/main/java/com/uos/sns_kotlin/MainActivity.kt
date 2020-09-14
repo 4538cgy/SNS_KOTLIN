@@ -17,6 +17,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.uos.sns_kotlin.navigation.*
+import com.uos.sns_kotlin.util.FcmPush
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.jar.Manifest
 
@@ -90,6 +91,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
         }
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        FcmPush.instance.sendMessage("HqVXnBTvaoT2Okx3lDk35n9Dkwk1","hi","bye")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

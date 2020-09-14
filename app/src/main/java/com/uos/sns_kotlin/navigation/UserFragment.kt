@@ -23,6 +23,7 @@ import com.uos.sns_kotlin.Model.AlarmDTO
 import com.uos.sns_kotlin.Model.ContentDTO
 import com.uos.sns_kotlin.Model.FollowDTO
 import com.uos.sns_kotlin.R
+import com.uos.sns_kotlin.util.FcmPush
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
@@ -191,6 +192,9 @@ class UserFragment : Fragment() {
         alarmDTO.kind = 2
         alarmDTO.timestamp = System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message = auth?.currentUser?.email + getString(R.string.alarm_follow)
+        FcmPush.instance.sendMessage(destinationUid,"HowlInstgram",message)
     }
 
     fun getProfileImage(){
